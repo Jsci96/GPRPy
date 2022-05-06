@@ -3,6 +3,8 @@ import scipy as sp
 import numpy.matlib as matlib
 import scipy.interpolate as interp
 import scipy.signal as signal
+import csv
+import pandas as pd
 # For progress bar
 import time
 from tqdm import tqdm
@@ -318,7 +320,28 @@ def prepTopo(topofile,delimiter=',',xStart=0):
     # Read topofile, see if it is two columns or three columns.
     # Here I'm using numpy's loadtxt. There are more advanced readers around
     # but this one should do for this simple situation
-    topotable = np.loadtxt(topofile,delimiter=delimiter)
+    
+    ###############################
+    ###### Jaahnavee's  Code ######
+    ###############################
+    
+    # radfile = '/'.join(topofile.split('/')[:-1])+'/'+topofile.split('/')[-1][:-8]+'.rad'
+    # info = {}
+    # with open(radfile) as f:
+    #     for line in f:
+    #         strsp = line.split(':')
+    #         info[strsp[0]] = strsp[1].rstrip()
+
+    # dist = float(info['DISTANCE INTERVAL'])
+    # start = float(info['START POSITION'])
+    # end = float(info['LAST TRACE'])
+        
+    with open(topofile, 'r') as f:
+        reader = csv.reader(f, delimiter='\t')
+        topotable = pd.DataFrame(list(reader))
+        
+    topotable = topotable[7].astype(float)
+    
     topomat = np.asmatrix(topotable)
     # Depending if the table has two or three columns,
     # need to treat it differently
