@@ -20,7 +20,7 @@ How do I install the software?
 	python installMigration.py
 	pip install .
 
-- After installation you should be able to run the program by typing gprp y in terminal.
+- After installation you should be able to run the program by typing gprpy p in terminal.
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
