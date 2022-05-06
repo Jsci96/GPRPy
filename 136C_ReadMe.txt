@@ -7,19 +7,7 @@ jaahnavee96@ucla.edu
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
-Where do I place the gprpy folder to run the application?
-
-/opt/anaconda3/lib/python3.8/site-packages
-
-----------------------------------------------------------------------------------------------------------------------------------
-
-How do I run the gprpy application?
-
-Open terminal and type: gprpy p
-
-----------------------------------------------------------------------------------------------------------------------------------
-
-I put the folder in the directory you told me to and the application still doesn't work. What do I do?
+How do I install the software?
 
 - Go to https://github.com/Jsci96/GPRPy, and download the Code (green button) as a zip folder.
 
@@ -33,6 +21,12 @@ I put the folder in the directory you told me to and the application still doesn
 	pip install .
 
 - After installation you should be able to run the program by typing gprp y in terminal.
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+How do I run the gprpy application?
+
+Open terminal and type: gprpy p
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
