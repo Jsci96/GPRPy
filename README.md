@@ -11,14 +11,17 @@ How do I install the software?
 - Extract the files from the folder.
 
 - In terminal cd into the folder you just unzipped. I installed mine on my Desktop so in terminal I will type
+
   `cd /Users/jaahnavee/Desktop/GPRPy-master`
 
-- Type the following to install (wait for the first process to finish before typing the next):
+- Type the following to install (wait for the first process to finish before typing the next)
+
   `python installMigration.py`
    
    `pip install .`
 
 - After installation you should be able to run the program by typing
+
   `gprpy p`
    
   in terminal.
@@ -28,6 +31,7 @@ How do I install the software?
 How do I run the gprpy application?
 
 - Open terminal and type
+
   `gprpy p`
 - More information on installation is available below (taken from the source README).
 
