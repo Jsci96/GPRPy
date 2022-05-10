@@ -80,6 +80,6 @@ for i in range(len(edges)):
 #########################
 
 directory2 = filedialog.askdirectory()                                          # Asks the user to select the directory where the final .kml file should be saved
-track_label = input('Enter the track label: ')                                  # Asks the user to enter, in the Spyder Console, a label for the .kml file
+track_label = input('Enter the file label: ')                                   # Asks the user to enter, in the Spyder Console, a label for the .kml file
 
 kml.save(directory2+'/GPS_track_'+str(track_label)+'.kml')                      # Saves the .kml file
