@@ -1,10 +1,3 @@
-# GPRPy
-Open-source Ground Penetrating Radar processing and visualization software. Supported by the National Science Foundation under grant [EAR-1550732](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1550732).
-
-![Profile GUI](profileGUI.png)
-
-![CMP/WARR GUI](CWGUI.png)
-
 ## FOR UCLA EPSS 136C
 Spring 2022
 Jaahnavee Venkatraman (jaahnavee96@ucla.edu)
@@ -49,7 +42,14 @@ How do I view the GPS tracks on Google Earth?
 ----------------------------------------------------------------------------------------------------------------------------------
 
 And you're all set- enjoy!
-Feel free to email me / drop by Dave's office if you have any questions.
+Feel free to email me / drop by Dave's office if you have any questions. Below this begins the source README.
+
+# GPRPy
+Open-source Ground Penetrating Radar processing and visualization software. Supported by the National Science Foundation under grant [EAR-1550732](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1550732).
+
+![Profile GUI](profileGUI.png)
+
+![CMP/WARR GUI](CWGUI.png)
 
 ## Simplemost installation
 
