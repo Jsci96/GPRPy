@@ -35,7 +35,7 @@ How do I run the gprpy application?
 
 How do I view the GPS tracks on Google Earth?
 
-- In the downloaded GPRPy-master folder is a script called txt_to_kml.py. Open it in Spyder.
+- In the folder GPRPy-master > gprpy is a script called txt_to_kml.py. Open it in Spyder.
 - Follow the instructions in the code header to produce a .kml file from your MALA GPS tracks (.cor.txt files).
 - Go to Google Earh, click on the 'Projects' tab > Open > Import KML file from computer.
 
