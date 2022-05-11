@@ -5,9 +5,9 @@ Jaahnavee Venkatraman (jaahnavee96@ucla.edu)
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
-I don't have a Mac so I don't have Terminal. How do I install it?
+I don't have a Mac so I don't have Terminal. What do I do?
 
-- https://docs.microsoft.com/en-us/windows/terminal/install
+You can either install Terminal for Windows here (https://docs.microsoft.com/en-us/windows/terminal/install) or use your Powershell Prompt in Anaconda Navigator.
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
