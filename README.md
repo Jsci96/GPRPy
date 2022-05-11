@@ -5,6 +5,12 @@ Jaahnavee Venkatraman (jaahnavee96@ucla.edu)
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
+I don't have a Mac so I don't have Terminal. How do I install it?
+
+- https://docs.microsoft.com/en-us/windows/terminal/install
+
+----------------------------------------------------------------------------------------------------------------------------------
+
 How do I install the software?
 
 - Go to https://github.com/Jsci96/GPRPy, and download the Code (green button) as a zip folder.
@@ -15,7 +21,7 @@ How do I install the software?
 
   `cd /Users/jaahnavee/Desktop/GPRPy-master`
 
-- Type the following to install (wait for the first process to finish before typing the next)
+- Type the following to install the software (wait for the first process to finish before typing the next)
 
   `python installMigration.py`
    
