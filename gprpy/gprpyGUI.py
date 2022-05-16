@@ -166,7 +166,7 @@ class GPRPyApp:
         # Mode switch for figure color
         self.color=tk.StringVar()
         self.color.set("gray")
-        colswitch = tk.OptionMenu(master,self.color,"gray","bwr")
+        colswitch = tk.OptionMenu(master,self.color,"gray","bwr","PiYG")
         colswitch.grid(row=0, column=7, sticky='nsew',rowspan=2)
         self.balloon.bind(colswitch,
                           "Choose between gray-scale\n"
