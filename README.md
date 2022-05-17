@@ -29,7 +29,9 @@ How do I install the software?
 
 - After installation you should be able to run the program by typing
 
-  `gprpy p`
+  `gprpy p` [for fixed survey]
+  
+  `gprpy c` [for CMP/WARR surveys]
    
   in terminal.
 
