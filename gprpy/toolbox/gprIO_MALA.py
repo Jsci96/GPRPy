@@ -22,7 +22,6 @@ def readMALA(file_name):
         filename = file_name + '.rd3'
         data = np.fromfile(filename, dtype=np.int16)        
     except:
-        # I'm not sure what the format of rd7 is. Just assuming it's the same
         filename = file_name + '.rd7'
         data = np.fromfile(filename, dtype=np.int32)
     
@@ -52,3 +51,6 @@ def readGPRhdr(filename):
             info[strsp[0]] = strsp[1].rstrip()
     return info
 
+# test
+
+#data = readMALA('/Users/jaahnavee/Desktop/MALA Test/69/DAT_0069')[0]
