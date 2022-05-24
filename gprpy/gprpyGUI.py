@@ -15,6 +15,8 @@ import matplotlib as mpl
 mpl.use('TkAgg')
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
+from matplotlib import colors
+from matplotlib import cm
 import gprpy.gprpy as gp
 import numpy as np
 import gprpy.toolbox.splash as splash
@@ -22,15 +24,48 @@ import os
 import Pmw
 import scipy.interpolate as interp
 
-
-
-
 colsp=2
 rightcol=9
 halfwid=6
 figrowsp=21+1
 figcolsp=9
 
+##########################################
+############ Jaahnavee's code ############
+##########################################
+
+def inter_from_256(x):
+    return np.interp(x=x,xp=[0,255],fp=[0,1])
+
+# blue --> yellow --> green --> red (reversed)
+
+c0 = [0,0,238]
+c1 = [255,215,0]
+c2 = [162,205,90]
+c3 = [220,20,60]
+
+cdict = {
+    'red': ((0.0, inter_from_256(c3[0]), inter_from_256(c3[0])),
+              (1/3*1, inter_from_256(c2[0]), inter_from_256(c2[0])),
+              (1/3*2, inter_from_256(c1[0]), inter_from_256(c1[0])),
+              (1.0, inter_from_256(c0[0]), inter_from_256(c0[0]))),   
+    
+    'green':((0.0,inter_from_256(c3[1]),inter_from_256(c3[1])),
+           (1/3*1,inter_from_256(c2[1]),inter_from_256(c2[1])),
+           (1/3*2,inter_from_256(c1[1]),inter_from_256(c1[1])),
+           (1.0,inter_from_256(c0[1]),inter_from_256(c0[1]))),
+    
+    'blue': ((0.0, inter_from_256(c3[2]), inter_from_256(c3[2])),
+            (1/3*1, inter_from_256(c2[2]), inter_from_256(c2[2])),
+            (1/3*2, inter_from_256(c1[2]), inter_from_256(c1[2])),
+            (1.0, inter_from_256(c0[2]), inter_from_256(c0[2]))),
+}
+
+custom = colors.LinearSegmentedColormap(name="custom", segmentdata=cdict)
+cm.register_cmap('custom', custom)
+
+##########################################
+##########################################
 
 class GPRPyApp:
     '''
@@ -72,7 +107,6 @@ class GPRPyApp:
         # Set font size for screen res
         mpl.rcParams.update({'font.size': mpl.rcParams['font.size']*self.widfac})
         a.tick_params(direction='out',length=6*self.widfac,width=self.highfac)
-        
         a.get_xaxis().set_visible(False)
         a.get_yaxis().set_visible(False)
         canvas = FigureCanvasTkAgg(fig, master=self.window)
@@ -163,16 +197,22 @@ class GPRPyApp:
         self.contrast.set("1.0")
 
         
+##########################################
+############ Jaahnavee's code ############
+##########################################
+
         # Mode switch for figure color
         self.color=tk.StringVar()
         self.color.set("gray")
-        colswitch = tk.OptionMenu(master,self.color,"gray","bwr","PiYG")
+        colswitch = tk.OptionMenu(master,self.color,"gray","bwr","custom")
         colswitch.grid(row=0, column=7, sticky='nsew',rowspan=2)
         self.balloon.bind(colswitch,
                           "Choose between gray-scale\n"
                           "and red-white-blue (rwb)\n" 
                           "data representation.")
 
+##########################################
+##########################################
 
         # Refreshing plot
         plotButton = tk.Button(
@@ -646,7 +686,7 @@ class GPRPyApp:
             noversample = sd.askinteger("Input","Make how many copies of each trace (n).\nRecommended: Same as number of traces to be smoothed.")
             if noversample is not None:
                 proj.profileSmooth(ntraces,noversample)
-        
+                
             
     def topoCorrect(self,proj):
         if proj.velocity is None:
@@ -657,10 +697,8 @@ class GPRPyApp:
             out = self.getDelimiter()    
             proj.topoCorrect(topofile,self.delimiter)
             self.prevyrng=self.yrng
-            self.yrng=[proj.minTopo-np.max(proj.depth),proj.maxTopo]
-
-
-   
+            self.yrng=[proj.minTopo-np.max(proj.depth),proj.maxTopo] 
+            
 
     def startPicking(self,proj,fig,a,canvas):
         self.picking = True
@@ -671,8 +709,7 @@ class GPRPyApp:
             self.plotProfileData(proj,fig=fig,a=a,canvas=canvas)
             print(self.picked)
         self.pick_cid = canvas.mpl_connect('button_press_event', addPoint)
-
-            
+        
 
     def stopPicking(self,proj,canvas):
         filename = fd.asksaveasfilename()
@@ -772,32 +809,57 @@ class GPRPyApp:
             canvas.mpl_disconnect(self.cursor_cid)            
         dx=proj.profilePos[3]-proj.profilePos[2]
         dt=proj.twtt[3]-proj.twtt[2]
-        a.clear()        
-        stdcont = np.nanmax(np.abs(proj.data)[:])        
-        if proj.velocity is None:
+        a.clear()
+        #a2 = a.twinx()
+        stdcont = np.nanmax(np.abs(proj.data)[:]) 
+        
+        if proj.velocity is None:           
+            
+            # a2.clear()
+            # a2.set_yticks([])
+            # a2.set_yticklabels([])
+            
             a.imshow(proj.data,cmap=self.color.get(),extent=[min(proj.profilePos)-dx/2.0,
                                                              max(proj.profilePos)+dx/2.0,
                                                              max(proj.twtt)+dt/2.0,
                                                              min(proj.twtt)-dt/2.0],
-                     aspect="auto",
-                     vmin=-stdcont/self.contrast.get(), vmax=stdcont/self.contrast.get())
+                      aspect="auto",
+                      vmin=-stdcont/self.contrast.get(), vmax=stdcont/self.contrast.get())
             a.set_ylim(self.yrng)
             a.set_xlim(self.xrng)
             a.set_ylabel("two-way travel time [ns]", fontsize=mpl.rcParams['font.size'])
             a.invert_yaxis()
-        elif proj.maxTopo is None:
+            
+        elif proj.maxTopo is None:         
+
             dy=dt*proj.velocity
             a.imshow(proj.data,cmap=self.color.get(),extent=[min(proj.profilePos)-dx/2.0,
                                                              max(proj.profilePos)+dx/2.0,
                                                              max(proj.depth)+dy/2.0,
                                                              min(proj.depth)-dy/2.0],
-                     aspect="auto",
-                     vmin=-stdcont/self.contrast.get(), vmax=stdcont/self.contrast.get())
-            a.set_ylabel("depth [m]", fontsize=mpl.rcParams['font.size'])
+                      aspect="auto",
+                      vmin=-stdcont/self.contrast.get(), vmax=stdcont/self.contrast.get())
             a.set_ylim(self.yrng)
             a.set_xlim(self.xrng)
+            a.set_ylabel("depth [m]", fontsize=mpl.rcParams['font.size'])
+            a.yaxis.set_label_position("left")      
             a.invert_yaxis()
-        else:
+            
+            # a2.imshow(proj.data,cmap=self.color.get(),extent=[min(proj.profilePos)-dx/2.0,
+            #                                                   max(proj.profilePos)+dx/2.0,
+            #                                                   max(proj.twtt)+dt/2.0,
+            #                                                   min(proj.twtt)-dt/2.0],
+            #             aspect="auto",
+            #             vmin=-stdcont/self.contrast.get(), vmax=stdcont/self.contrast.get())    
+            # a2.set_ylabel("two-way travel time [ns]")  
+            # a2.yaxis.set_label_position("right")
+                        
+        else: 
+                        
+            # a2.clear()
+            # a2.set_yticks([])
+            # a2.set_yticklabels([])   
+            
             dy=dt*proj.velocity
             a.imshow(proj.data,cmap=self.color.get(),extent=[min(proj.profilePos)-dx/2.0,
                                                              max(proj.profilePos)+dx/2.0,
