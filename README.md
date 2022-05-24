@@ -34,14 +34,6 @@ How do I install the software?
   `gprpy c` [for CMP/WARR surveys]
    
   in terminal.
- 
-----------------------------------------------------------------------------------------------------------------------------------
-
-I want to access and change the root code for the application. How do I do this?
-
- - In order to edit the code yourself, you will need to locate the root folder of your Anaconda application, and go to lib > python3.8 > site-packages > gprpy. Here, you will find all the python scripts used by GPRPy. Note that changing the code or replacing files on your Desktop gprpy folder will not make direct changes to the application.
- 
- - If you are looking to switch out the files to add the 'custom' color option, replace gprpy > gprpyGUI.py with the corresponding file in my git repository above.
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
@@ -52,6 +44,14 @@ How do I run the gprpy application?
   `gprpy p`
 - More information on installation is available below (taken from the source README).
 
+----------------------------------------------------------------------------------------------------------------------------------
+
+I want to access and change the root code for the application. How do I do this?
+
+ - In order to edit the code yourself, you will need to locate the root folder of your Anaconda application, and go to lib > python3.8 > site-packages > gprpy. Here, you will find all the python scripts used by GPRPy. Note that changing the code or replacing files on your Desktop gprpy folder will not make direct changes to the application.
+ 
+ - If you are looking to switch out the files to add the 'custom' color option, replace gprpy > gprpyGUI.py with the corresponding file in my git repository above.
+ 
 ----------------------------------------------------------------------------------------------------------------------------------
 
 How do I view the GPS tracks on Google Earth?
