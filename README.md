@@ -34,6 +34,8 @@ How do I install the software?
   `gprpy c` [for CMP/WARR surveys]
    
   in terminal.
+  
+ - In order to edit the code yourself, you will need to locate the root folder of your Anaconda application, and go to lib > python3.8 > site-packages > gprpy. Here you will find all the python scripts that GPRPy uses to run.
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
