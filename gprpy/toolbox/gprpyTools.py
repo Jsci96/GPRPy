@@ -322,15 +322,7 @@ def prepTopo(topofile,delimiter=',',xStart=0):
     # Here I'm using numpy's loadtxt. There are more advanced readers around
     # but this one should do for this simple situation
     
-    ###############################
-    ###### Jaahnavee's  Code ######
-    ###############################
-    
-   # Read topofile, see if it is two columns or three columns.
-    # Here I'm using numpy's loadtxt. There are more advanced readers around
-    # but this one should do for this simple situation
-    
-    ############################################################################################################################
+    #################################################################################################
     
     ###############################
     ###### Jaahnavee's  Code ######
@@ -341,7 +333,7 @@ def prepTopo(topofile,delimiter=',',xStart=0):
     #import pandas as pd
     #import utm
     
-    #topofile = '/Users/jaahnavee/Desktop/MALA Test/68/DAT_0068.cor.txt' # to be deleted at the end
+    #topofile = '/Users/jaahnavee/Desktop/MALA Test/68/DAT_0068.cor.txt'
     #delimiter = '\t'
     #xStart = 0
            
@@ -357,7 +349,7 @@ def prepTopo(topofile,delimiter=',',xStart=0):
         
     topomat = np.asmatrix(topotable)
 
-    ############################################################################################################################
+    #################################################################################################
 
     # Depending if the table has two or three columns,
     # need to treat it differently
