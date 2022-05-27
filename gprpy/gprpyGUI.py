@@ -528,9 +528,6 @@ class GPRPyApp:
                           "VTK format, that can be read by\n" 
                           "Paraview or similar 3D programs")
         
-
-
-        
         # Write script
         HistButton = tk.Button(
             text="write script", fg="black",
@@ -548,9 +545,6 @@ class GPRPyApp:
                           'The script will not contain visualization \n'
                           'settings such as x-range settings, unless \n'
                           'the "print figure" command was used. ')
-
-
-
 
     def undo(self,proj):
         if self.picking:
@@ -802,7 +796,11 @@ class GPRPyApp:
             proj.writeHistory(filename)
             print("Wrote script to " + filename)
 
-
+##########################################
+############ Jaahnavee's code ############
+##########################################
+    
+    # Plot Profile Data
     def plotProfileData(self,proj,fig,a,canvas):
         # Clear cursor coordinate cid if if exists to avoid multiple instances
         if 'self.cursor_cid' in locals():
@@ -897,7 +895,9 @@ class GPRPyApp:
 
         canvas.get_tk_widget().grid(row=2,column=0,columnspan=figcolsp, rowspan=figrowsp, sticky='nsew')
         canvas.draw()
-        
+
+##########################################
+##########################################
 
     # Show hyperbola
     def showHyp(self,proj,a):
@@ -952,18 +952,6 @@ class GPRPyApp:
     def setTab(self):
         self.delimiter = '\t'
         print("Delimiter set to tab")
-
-
-# root = tk.Tk()
-    
-# for col in range(rightcol):
-#     root.columnconfigure(col, weight=1)
-# for row in range(figrowsp):    
-#     root.rowconfigure(row, weight=1)
-            
-# app = GPRPyApp(root)
-
-# root.mainloop()
 
 
 
