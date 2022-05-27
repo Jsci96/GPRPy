@@ -37,11 +37,11 @@ figcolsp=9
 def inter_from_256(x):
     return np.interp(x=x,xp=[0,255],fp=[0,1])
 
-# blue --> yellow --> green --> red (reversed)
+# blue --> green --> yellow --> red
 
 c0 = [0,0,238]
-c1 = [255,215,0]
-c2 = [162,205,90]
+c1 = [0,100,0]
+c2 = [255,215,0]
 c3 = [220,20,60]
 
 cdict = {
