@@ -53,4 +53,5 @@ def readGPRhdr(filename):
 
 # test
 
-#data = readMALA('/Users/jaahnavee/Desktop/MALA Test/69/DAT_0069')[0]
+# data = readMALA('/Users/jaahnavee/Desktop/MALA Test/119/DAT_0119')[0]
+# info = readGPRhdr('/Users/jaahnavee/Desktop/MALA Test/119/DAT_0119'+'.rad')
