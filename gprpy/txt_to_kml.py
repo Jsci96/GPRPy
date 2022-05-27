@@ -32,7 +32,7 @@ import csv
 import pandas as pd
 import simplekml
 from tkinter import filedialog
-from tkinter import *
+from tkinter import Tk
 import os
 
 #########################
@@ -50,7 +50,7 @@ folder = os.listdir(directory)                                                  
 
 finaltable = pd.DataFrame()
 for topofile in folder:
-    if '.cor.txt' in topofile:
+    if '.cor' in topofile:
         with open (directory+'/'+topofile, 'r') as f: 
             reader = csv.reader(f, delimiter='\t')                              # Opens each GPS file
             topotable = pd.DataFrame(list(reader))                              # Puts each file into a data frame
