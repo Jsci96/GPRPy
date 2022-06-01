@@ -1,6 +1,4 @@
-import struct
 import numpy as np
-import re # Regular expressions
 
 
 def readMALA(file_name):
@@ -53,5 +51,6 @@ def readGPRhdr(filename):
 
 # test
 
-# data = readMALA('/Users/jaahnavee/Desktop/MALA Test/119/DAT_0119')[0]
-# info = readGPRhdr('/Users/jaahnavee/Desktop/MALA Test/119/DAT_0119'+'.rad')
+# file = 112
+# data = readMALA('/Users/jaahnavee/Desktop/MALA Test/'+str(file)+'/DAT_0'+str(file))[0]
+# info = readGPRhdr('/Users/jaahnavee/Desktop/MALA Test/'+str(file)+'/DAT_0'+str(file)+'.rad')
