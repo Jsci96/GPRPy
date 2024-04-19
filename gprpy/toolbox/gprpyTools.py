@@ -328,15 +328,18 @@ def prepTopo(topofile,delimiter=',',xStart=0):
     ###### Jaahnavee's  Code ######
     ###############################
     
-    # test
+    # test code
+    # read info and file from gprIO_MALA.py
 
-    # file = 112
-    # topofile = '/Users/jaahnavee/Desktop/MALA Test/'+str(file)+'/DAT_0'+str(file)+'.cor'
-    # delimiter = '\t'
+    # import csv
+    # import utm
+    # import scipy.interpolate as interp
+    # import pandas as pd
     # profilePos = float(info["DISTANCE INTERVAL"])*np.arange(0,data.shape[1])
     # twtt = np.linspace(0,float(info["TIMEWINDOW"]),int(info["SAMPLES"]))
     # xStart = 0
-    # velocity = 0.1
+    # velocity = 0.15
+    # delimiter = '\t'
            
     with open(topofile, 'r') as f:
         reader = csv.reader(f, delimiter=delimiter)
@@ -354,7 +357,7 @@ def prepTopo(topofile,delimiter=',',xStart=0):
 
     # Depending if the table has two or three columns,
     # need to treat it differently
-    if topomat.shape[1] is 3:
+    if topomat.shape[1] == 3:
         # Save the three columns
         threeD = topomat
         # Turn the three-dimensional positions into along-profile
@@ -368,7 +371,7 @@ def prepTopo(topofile,delimiter=',',xStart=0):
         )
         alongdist = np.cumsum(steplen)
         topoPos = np.append(xStart,alongdist+xStart)
-    elif topomat.shape[1] is 2:
+    elif topomat.shape[1] == 2:
         threeD = None
         topoPos = topomat[:,0]
         topoVal = topomat[:,1]
@@ -414,7 +417,7 @@ def correctTopo(data, velocity, profilePos, topoPos, topoVal, twtt):
 ###############################
 ###### Jaahnavee's  Code ######
 ###############################
-  
+ 
     if not ((all(np.diff(topoPos)>0)) or (all(np.diff(topoPos)<0))):
         
         for i in np.where(np.diff(topoPos) == 0)[0]:
@@ -467,7 +470,7 @@ def correctTopo(data, velocity, profilePos, topoPos, topoVal, twtt):
         tshift = np.max(tshift) - tshift
         # Make new datamatrix
         newdata = np.empty((data.shape[0]+maxup,data.shape[1]))
-        newdata[:] = np.nan
+        #newdata[:] = np.nan
         # Set new twtt
         newtwtt = np.arange(0, twtt[-1] + maxup*timeStep, timeStep)
         nsamples = len(twtt)

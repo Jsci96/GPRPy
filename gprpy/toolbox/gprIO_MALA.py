@@ -51,6 +51,8 @@ def readGPRhdr(filename):
 
 # test
 
-# file = 112
-# data = readMALA('/Users/jaahnavee/Desktop/MALA Test/'+str(file)+'/DAT_0'+str(file))[0]
-# info = readGPRhdr('/Users/jaahnavee/Desktop/MALA Test/'+str(file)+'/DAT_0'+str(file)+'.rad')
+# file = '0243_1'
+# filepath = '/Users/jaahnavee/Downloads/MALA raw GPR files'+'/DAT_'+file
+# topofile = filepath+'.cor'
+# data = readMALA(filepath)[0]
+# info = readGPRhdr(filepath+'.rad')
