@@ -63,6 +63,12 @@ The asterisk (*) indicates the environment you're currently in. To change the en
 
 `conda activate (environment name)`
 
+Retype
+
+`conda info --envs`
+
+and the asterisk (*) should now be next to the new (environment name).
+
 ----------------------------------------------------------------------------------------------------------------------------------
 
 I want to access and change the root code for the application. How do I do this?
