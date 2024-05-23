@@ -44,7 +44,24 @@ How do I run the gprpy application?
 - Open terminal and type
 
   `gprpy p`
+  
 - More information on installation is available below (taken from the source README).
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+How do I change my python environment from 3.12 to 3.8?
+
+You have to have 'Conda' installed on your device for this to work. To check if it's installed type
+
+`which conda`
+
+Once Conda is installed, you can check which environment is activated by typing
+
+`conda info --envs`
+
+The asterisk (*) indicates the environment you're currently in. To change the environment type
+
+`conda activate (environment name)`
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
