@@ -27,6 +27,8 @@ How do I install the software?
    
    `pip install .`
 
+  Note: GPRPy needs to be installed on Python3.8 or less. The installation will not work if you are in a Python12 environment.
+
 - After installation you should be able to run the program by typing
 
   `gprpy p` [for fixed survey]
