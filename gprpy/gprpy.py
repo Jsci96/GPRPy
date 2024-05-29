@@ -1,6 +1,5 @@
 import os
 import numpy as np
-import matplotlib as mpl
 import matplotlib.pyplot as plt
 import pickle
 import gprpy.toolbox.gprIO_DT1 as gprIO_DT1
@@ -306,11 +305,12 @@ class gprpyProfile:
         yrng         yrng value used to prepare the figure
         xrng         xrng value used to prepare the figure
         asp          asp value used to prepare the figure
+        ax           figure axis
 
         '''
         dx=self.profilePos[3]-self.profilePos[2]
         dt=self.twtt[3]-self.twtt[2]
-        stdcont = np.nanmax(np.abs(self.data)[:])   
+        stdcont = np.nanmax(np.abs(self.data)[:])       
         
         if self.velocity is None:
             plt.imshow(self.data,cmap=color,extent=[min(self.profilePos)-dx/2.0,
@@ -318,7 +318,7 @@ class gprpyProfile:
                                                     max(self.twtt)+dt/2.0,
                                                     min(self.twtt)-dt/2.0],
                        aspect="auto",vmin=-stdcont/contrast, vmax=stdcont/contrast)
-            plt.gca().set_ylabel("two-way travel time [ns]")
+            plt.gca().set_ylabel("time [ns]")
             plt.gca().invert_yaxis()
             if yrng is not None:
                 yrng=[np.max(yrng),np.min(yrng)]
@@ -331,15 +331,14 @@ class gprpyProfile:
                                                     max(self.profilePos)+dx/2.0,
                                                     max(self.depth)+dy/2.0,
                                                     min(self.depth)-dy/2.0],
-                        aspect="auto",vmin=-stdcont/contrast, vmax=stdcont/contrast)
+                       aspect="auto",vmin=-stdcont/contrast, vmax=stdcont/contrast)
             plt.gca().set_ylabel("depth [m]")
             plt.gca().invert_yaxis()
-                                   
             if yrng is not None:
                 yrng=[np.max(yrng),np.min(yrng)]
             else:
                 yrng=[np.max(self.depth),np.min(self.depth)]
-                                                
+                
         else:
             dy=dt*self.velocity
             plt.imshow(self.data,cmap=color,extent=[min(self.profilePos)-dx/2.0,
@@ -369,8 +368,9 @@ class gprpyProfile:
         plt.gca().set_xlabel("profile position [m]")
         plt.gca().xaxis.tick_top()
         plt.gca().xaxis.set_label_position('top')
+        ax = plt.gca()
         
-        return contrast, color, yrng, xrng, asp
+        return contrast, color, yrng, xrng, asp, ax
        
     
     def showProfile(self, **kwargs):
@@ -388,8 +388,9 @@ class gprpyProfile:
         asp          aspect ratio [default: None, meaning automatic]
 
         '''
-        self.prepProfileFig(**kwargs)
-        plt.show(block=False)
+        contrast, color, yrng, xrng, asp, ax = self.prepProfileFig(**kwargs)
+        #plt.show(block=False)
+        return ax
 
 
     def printProfile(self, figname, dpi=600, **kwargs):
@@ -408,7 +409,7 @@ class gprpyProfile:
         asp          aspect ratio [default: None, meaning automatic]
 
         '''
-        contrast, color, yrng, xrng, asp = self.prepProfileFig(**kwargs)
+        contrast, color, yrng, xrng, asp, ax = self.prepProfileFig(**kwargs)
         plt.savefig(figname, format='pdf', dpi=dpi)
         plt.close('all')
         # Put what you did in history
@@ -454,7 +455,7 @@ class gprpyProfile:
     def alignTraces(self):
         '''
         Aligns the traces in the profile such that their maximum 
-        amplitudes align at the average two-way travel time of the 
+        amplitudes align at the average travel time of the 
         maximum amplitudes.
         '''
         # Store previous state for undo
@@ -667,18 +668,18 @@ class gprpyProfile:
         # antenna separation with the speed of light 0.3 m/ns.
         # And we only look at half the
         # two-way travel time. Hence divide by two
-        t0 = self.twtt/2 + int(float(self.antsep))/(2*0.3)
+        t0 = self.twtt/2 + self.antsep/(2*0.3)
 
         # t0 is when the waves left the transmitter antenna.
         # To be able to calculate the depth time from the
         # single-way travel time we need to shift the time reference
         # frame. Lets set it "arriving at midpoint time", so
-        ta = t0 + int(float(self.antsep))/(2*self.velocity)
+        ta = t0 + self.antsep/(2*self.velocity)
         # Later we will need to undo this reference frame transformation
 
         # Now use the pythagorean relationship between single-way travel
         # time to the depth point and the depth time td
-        tad = np.sqrt( ta**2 - (int(float(self.antsep))/(2*self.velocity))**2 )
+        tad = np.sqrt( ta**2 - (self.antsep/(2*self.velocity))**2 )
 
         # We are still in the "arriving at midpoint" time frame ta
         # To transform ta into depth time td, we need to shift it back
@@ -688,7 +689,7 @@ class gprpyProfile:
         # No travel into depth has been recorded at the receiver.
         # These "arrivals" will just be shifted into "negative arrival times"
         # and hence "negative depth"
-        td = tad - int(float(self.antsep))/(2*self.velocity)
+        td = tad - self.antsep/(2*self.velocity)
 
         # Finally, translate time into depth
         self.depth = td*self.velocity
@@ -1063,10 +1064,10 @@ class gprpyCW(gprpyProfile):
 
     def linStackedAmplitude(self,vmin=0.01,vmax=0.35,vint=0.01):
         '''
-        Calculates the linear stacked amplitudes for each two-way 
+        Calculates the linear stacked amplitudes for each 
         travel time sample and the provided velocity range 
         by summing the pixels of the data that follow a line given 
-        by the two-way travel time zero offset and the velocity.
+        by the travel time zero offset and the velocity.
 
         INPUT:
         vmin       minimal velocity for which to calculate the 
@@ -1091,10 +1092,10 @@ class gprpyCW(gprpyProfile):
 
     def hypStackedAmplitude(self,vmin=0.01,vmax=0.35,vint=0.01):
         '''
-        Calculates the hyperbolic stacked amplitudes for each two-way 
+        Calculates the hyperbolic stacked amplitudes for each 
         travel time sample and the provided velocity range 
         by summing the pixels of the data that follow a hyperbola given 
-        by the two-way travel time apex and the velocity.
+        by the travel time apex and the velocity.
 
         INPUT:
         vmin       minimal velocity for which to calculate the 
@@ -1119,11 +1120,11 @@ class gprpyCW(gprpyProfile):
 
     def addLin(self,zerotwtt,vel):
         '''
-        Adds an observed line given by its zero-offset two-way travel
+        Adds an observed line given by its zero-offset travel
         time and velocity to the list of lines.
 
         INPUT:
-        zerotwtt     the zero-offset two-way travel time (intercept)
+        zerotwtt     the zero-offset travel time (intercept)
                      of the observed line
         vel          the velocity (inverse slope) of the observed line
         '''
@@ -1137,11 +1138,11 @@ class gprpyCW(gprpyProfile):
 
     def addHyp(self,zerotwtt,vel):
         '''
-        Adds an observed hyperbola given by its apex two-way 
+        Adds an observed hyperbola given by its apex 
         travel time and velocity to the list of lines.
 
         INPUT:
-        zerotwtt     the apex two-way travel time of the observed line
+        zerotwtt     the apex travel time of the observed line
         vel          the velocity of the observed line
         '''
         # Store previous state for undo
@@ -1210,7 +1211,7 @@ class gprpyCW(gprpyProfile):
                                                 max(self.twtt)+dt/2.0,
                                                 min(self.twtt)-dt/2.0],
                    aspect="auto",vmin=-stdcont/contrast, vmax=stdcont/contrast)
-        plt.gca().set_ylabel("two-way travel time [ns]")
+        plt.gca().set_ylabel("time [ns]")
         plt.gca().invert_yaxis()
         if yrng is not None:
             yrng=[np.max(yrng),np.min(yrng)]
@@ -1304,7 +1305,7 @@ class gprpyCW(gprpyProfile):
                 
 
             plt.gca().set_xlabel("velocity [m/ns]")
-            plt.gca().set_ylabel("two-way travel time [ns]")
+            plt.gca().set_ylabel("time [ns]")
             #plt.gca().invert_yaxis()
             plt.gca().set_title(title)
             plt.gca().get_xaxis().set_visible(True)

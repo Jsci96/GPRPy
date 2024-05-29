@@ -10,7 +10,6 @@ import time
 from tqdm import tqdm
 import utm
 
-
 def alignTraces(data):
     '''
     Aligns the traces in the profile such that their maximum 
@@ -321,7 +320,7 @@ def prepTopo(topofile,delimiter=',',xStart=0):
     # Read topofile, see if it is two columns or three columns.
     # Here I'm using numpy's loadtxt. There are more advanced readers around
     # but this one should do for this simple situation
-    
+
     #################################################################################################
     
     ###############################
@@ -338,7 +337,7 @@ def prepTopo(topofile,delimiter=',',xStart=0):
     # profilePos = float(info["DISTANCE INTERVAL"])*np.arange(0,data.shape[1])
     # twtt = np.linspace(0,float(info["TIMEWINDOW"]),int(info["SAMPLES"]))
     # xStart = 0
-    # velocity = 0.15
+    # velocity = 0.1
     # delimiter = '\t'
            
     with open(topofile, 'r') as f:
@@ -377,7 +376,7 @@ def prepTopo(topofile,delimiter=',',xStart=0):
         topoVal = topomat[:,1]
         topoPos = np.squeeze(np.asarray(topoPos))
     else:
-        print("Something is wrong with the topography file")
+        print("Something is wrong with the topogrphy file")
         topoPos = None
         topoVal = None
         threeD = None
@@ -410,23 +409,10 @@ def correctTopo(data, velocity, profilePos, topoPos, topoVal, twtt):
     # We assume that the profilePos are the correct along-profile
     # points of the measurements (they can be correted with adj profile)
     # For some along-profile points, we have the elevation from prepTopo
-    # So we can just interpolate  
-    
-#################################################################################################
-
-###############################
-###### Jaahnavee's  Code ######
-###############################
- 
-    if not ((all(np.diff(topoPos)>0)) or (all(np.diff(topoPos)<0))):
-        
-        for i in np.where(np.diff(topoPos) == 0)[0]:
-            if i == 0:
-                i = i+1
-                topoPos[i] = topoPos[i]+np.random.uniform(10**-3, 10**-3)*(i+1)
-            else:
-                topoPos[i] = ((topoPos[i-1]+topoPos[i+1])/2)
-        
+    # So we can just interpolate    
+    if not ((all(np.diff(topoPos)>0)) or  (all(np.diff(topoPos)<0))):
+        raise ValueError('\x1b[1;31;47m' + 'The profile vs topo file does not have purely increasing or decreasing along-profile positions' + '\x1b[0m')        
+    else:
         elev = interp.pchip_interpolate(topoPos,topoVal,profilePos)
         elevdiff = elev-np.min(elev)
         # Turn each elevation point into a two way travel-time shift.
@@ -445,42 +431,11 @@ def correctTopo(data, velocity, profilePos, topoPos, topoVal, twtt):
         # Set new twtt
         newtwtt = np.arange(0, twtt[-1] + maxup*timeStep, timeStep)
         nsamples = len(twtt)
-        
         # Enter every trace at the right place into newdata
         for pos in range(0,len(profilePos)):
             #print(type(tshift[pos][0]))
             newdata[tshift[pos][0]:tshift[pos][0]+nsamples ,pos] = np.squeeze(data[:,pos])
-            
-#################################################################################################
-                
-        # raise ValueError('\x1b[1;31;47m' + 'The profile vs topo file does not have purely increasing or decreasing along-profile positions' + '\x1b[0m')        
-    
-    else:
-        elev = interp.pchip_interpolate(topoPos,topoVal,profilePos)
-        elevdiff = elev-np.min(elev)
-        # Turn each elevation point into a two way travel-time shift.
-        # It's two-way travel time
-        etime = 2*elevdiff/velocity
-        timeStep=twtt[3]-twtt[2]
-        # Calculate the time shift for each trace
-        tshift = (np.round(etime/timeStep)).astype(int)
-        maxup = np.max(tshift)
-        # We want the highest elevation to be zero time.
-        # Need to shift by the greatest amount, where  we are the lowest
-        tshift = np.max(tshift) - tshift
-        # Make new datamatrix
-        newdata = np.empty((data.shape[0]+maxup,data.shape[1]))
-        #newdata[:] = np.nan
-        # Set new twtt
-        newtwtt = np.arange(0, twtt[-1] + maxup*timeStep, timeStep)
-        nsamples = len(twtt)
-        
-        # Enter every trace at the right place into newdata
-        for pos in range(0,len(profilePos)):
-            #print(type(tshift[pos][0]))
-            newdata[tshift[pos][0]:tshift[pos][0]+nsamples ,pos] = np.squeeze(data[:,pos])
-            
-    return newdata, newtwtt, np.max(elev), np.min(elev)
+        return newdata, newtwtt, np.max(elev), np.min(elev)
 
     
     
@@ -517,7 +472,7 @@ def prepVTK(profilePos,gpsmat=None,smooth=True,win_length=51,porder=3):
         #gpsmat=np.asmatrix(gpsmat)
         # Turn the three-dimensional positions into along-profile
         # distances
-        if gpsmat.shape[1] is 3:
+        if gpsmat.shape[1] == 3:
             npos = gpsmat.shape[0]
             steplen = np.sqrt(
                 np.power( gpsmat[1:npos,0]-gpsmat[0:npos-1,0] ,2.0) + 
