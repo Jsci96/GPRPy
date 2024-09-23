@@ -358,16 +358,16 @@ def prepTopo(topofile,delimiter=',',xStart=0):
     # need to treat it differently
     if topomat.shape[1] == 3:
         # Save the three columns
-        threeD = topomat
+        threeD = topomat                                                # .cor file
         # Turn the three-dimensional positions into along-profile
         # distances
-        topoVal = topomat[:,2]
-        npos = topomat.shape[0]
-        steplen = np.sqrt(
-            np.power( topomat[1:npos,0]-topomat[0:npos-1,0] ,2.0) + 
-            np.power( topomat[1:npos,1]-topomat[0:npos-1,1] ,2.0) +
-            np.power( topomat[1:npos,2]-topomat[0:npos-1,2] ,2.0)
-        )
+        topoVal = topomat[:,2]                                          # altitude
+        npos = topomat.shape[0]                                         # number of GPS points
+        steplen = np.sqrt(                                              # sqrt(
+            np.power( topomat[1:npos,0]-topomat[0:npos-1,0] ,2.0) +     # (x1 - x2)^2 latitude
+            np.power( topomat[1:npos,1]-topomat[0:npos-1,1] ,2.0) +     # (y1 - x2)^2 longitude
+            np.power( topomat[1:npos,2]-topomat[0:npos-1,2] ,2.0)       # (z1 - z2)^2 altitude
+        )                                                               # )
         alongdist = np.cumsum(steplen)
         topoPos = np.append(xStart,alongdist+xStart)
     elif topomat.shape[1] == 2:

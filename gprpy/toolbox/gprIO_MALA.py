@@ -60,3 +60,11 @@ def readGPRhdr(filename):
 
     return info
 
+# Test
+
+# file_name = '/Users/jaahnavee/Documents/RIMFAX/Horseshoe/43_450MHz/DAT_0043'
+# file_name = '/Users/jaahnavee/Downloads/DAT_0383/DAT_0383'
+# data, info = readMALA(file_name)
+# topofile = file_name+'.cor'
+
+
