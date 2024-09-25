@@ -2,6 +2,7 @@ import numpy as np
 import scipy as sp
 import numpy.matlib as matlib
 import scipy.interpolate as interp
+from scipy.interpolate import interp1d
 import scipy.signal as signal
 import csv
 import pandas as pd
@@ -334,23 +335,25 @@ def prepTopo(topofile,delimiter=',',xStart=0):
     # import utm
     # import scipy.interpolate as interp
     # import pandas as pd
+    # import matplotlib.pyplot as plt
+    # from scipy.interpolate import interp1d
     # profilePos = float(info["DISTANCE INTERVAL"])*np.arange(0,data.shape[1])
     # twtt = np.linspace(0,float(info["TIMEWINDOW"]),int(info["SAMPLES"]))
     # xStart = 0
     # velocity = 0.1
     # delimiter = '\t'
-           
+
     with open(topofile, 'r') as f:
-        reader = csv.reader(f, delimiter=delimiter)
-        topotable = pd.DataFrame(list(reader))
+        reader = csv.reader(f, delimiter=delimiter)                                                     # read the .cor topography file
+        topotable = pd.DataFrame(list(reader))                                                          # save data in topotable dataframe
         
-    topotable = topotable.drop(columns=[0,1,2,4,6,8,9]).astype(float)
-    topotable[5] = -topotable[5]  
+    topotable = topotable.drop(columns=[0,1,2,4,6,8,9]).astype(float)                                   # drop all columns except lat, lon, alt
+    topotable[5] = -topotable[5]                                                                        # lon is negative for CA field sites. Adjust according to location
 
     for i in range(0, len(topotable)):
-        topotable[3][i], topotable[5][i], a, b = utm.from_latlon(topotable[3][i], topotable[5][i])
+        topotable[3][i], topotable[5][i], a, b = utm.from_latlon(topotable[3][i], topotable[5][i])      # converts lat/lon to utm easting, northing 
         
-    topomat = np.asmatrix(topotable)
+    topomat = np.asmatrix(topotable)                                                                    # put new data in matrix topomat for manipulation
 
     #################################################################################################
 
@@ -358,18 +361,17 @@ def prepTopo(topofile,delimiter=',',xStart=0):
     # need to treat it differently
     if topomat.shape[1] == 3:
         # Save the three columns
-        threeD = topomat                                                # .cor file
-        # Turn the three-dimensional positions into along-profile
-        # distances
-        topoVal = topomat[:,2]                                          # altitude
-        npos = topomat.shape[0]                                         # number of GPS points
-        steplen = np.sqrt(                                              # sqrt(
-            np.power( topomat[1:npos,0]-topomat[0:npos-1,0] ,2.0) +     # (x1 - x2)^2 latitude
-            np.power( topomat[1:npos,1]-topomat[0:npos-1,1] ,2.0) +     # (y1 - x2)^2 longitude
-            np.power( topomat[1:npos,2]-topomat[0:npos-1,2] ,2.0)       # (z1 - z2)^2 altitude
-        )                                                               # )
+        threeD = topomat                                                                                # .cor file
+        # Turn the three-dimensional positions into along-profile distances
+        topoVal = topomat[:,2]                                                                          # altitude
+        npos = topomat.shape[0]                                                                         # number of GPS points
+        steplen = np.sqrt(                                                                              # sqrt(
+            np.power( topomat[1:npos,0]-topomat[0:npos-1,0] ,2.0) +                                     # (x1 - x2)^2 latitude
+            np.power( topomat[1:npos,1]-topomat[0:npos-1,1] ,2.0) +                                     # (y1 - x2)^2 longitude
+            np.power( topomat[1:npos,2]-topomat[0:npos-1,2] ,2.0)                                       # (z1 - z2)^2 altitude
+        )                                                                                               # )
         alongdist = np.cumsum(steplen)
-        topoPos = np.append(xStart,alongdist+xStart)
+        topoPos = np.append(xStart,alongdist+xStart)                                                    # offset each alongdist point by xStart (usually = 0)
     elif topomat.shape[1] == 2:
         threeD = None
         topoPos = topomat[:,0]
@@ -410,10 +412,14 @@ def correctTopo(data, velocity, profilePos, topoPos, topoVal, twtt):
     # points of the measurements (they can be correted with adj profile)
     # For some along-profile points, we have the elevation from prepTopo
     # So we can just interpolate    
+
     if not ((all(np.diff(topoPos)>0)) or  (all(np.diff(topoPos)<0))):
         raise ValueError('\x1b[1;31;47m' + 'The profile vs topo file does not have purely increasing or decreasing along-profile positions' + '\x1b[0m')        
     else:
-        elev = interp.pchip_interpolate(topoPos,topoVal,profilePos)
+        #elev = interp.pchip_interpolate(topoPos,topoVal,profilePos)         # interpolate
+        profilePos_scaled = np.interp(profilePos, (profilePos.min(), profilePos.max()), (topoPos.min(), topoPos.max()))
+        elev = interp.pchip_interpolate(topoPos, topoVal[:, 0], profilePos_scaled)
+        
         elevdiff = elev-np.min(elev)
         # Turn each elevation point into a two way travel-time shift.
         # It's two-way travel time

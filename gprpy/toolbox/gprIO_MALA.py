@@ -20,17 +20,17 @@ def readMALA(file_name):
 
     info = readGPRhdr(file_name+'.rad')
     try:
-        filename = file_name + '.rd3'
-        data = np.fromfile(filename, dtype=np.int16)        
+        filename = file_name + '.rd7'
+        data = np.fromfile(filename, dtype=np.int32)        
     except:
         # I'm not sure what the format of rd7 is. Just assuming it's the same
-        filename = file_name + '.rd7'
-        data = np.fromfile(filename, dtype=np.int32)
+        filename = file_name + '.rd3'
+        data = np.fromfile(filename, dtype=np.int16)
     
     nrows=int(len(data)/int(info['SAMPLES']))
-    
+   
     data = (np.asmatrix(data.reshape(nrows,int(info['SAMPLES'])))).transpose()
-        
+    
     return data, info
     
 
@@ -62,8 +62,8 @@ def readGPRhdr(filename):
 
 # Test
 
-# file_name = '/Users/jaahnavee/Documents/RIMFAX/Horseshoe/43_450MHz/DAT_0043'
-# file_name = '/Users/jaahnavee/Downloads/DAT_0383/DAT_0383'
+# file_num = '0368'
+# file_name = '/Users/jaahnavee/Documents/RIMFAX/Horseshoe/Sep 24 Trip/DAT_'+file_num
 # data, info = readMALA(file_name)
 # topofile = file_name+'.cor'
 
